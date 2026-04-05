@@ -50,7 +50,10 @@ async function initDatabase() {
     console.log("Database synced with force.");
   }
 
-  if (process.env.NODE_ENV === "development") {
+  // Seed database if no users exist (for development and initial production setup)
+  const { User } = require("./models");
+  const userCount = await User.count();
+  if (userCount === 0) {
     const seedDatabase = require("./database/seed");
     await seedDatabase();
   }
